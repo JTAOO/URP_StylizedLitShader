@@ -16,6 +16,9 @@ Shader "Universal Render Pipeline/Stylized Lit"
         [MainTexture] _BaseMap("Albedo", 2D) = "white" {}
         [MainColor] _BaseColor("Color", Color) = (1,1,1,1)
 
+        [Toggle]_UseToonIndirect("UseToonIndirect", Float) = 1
+        [Toggle]_UseToonDirect("UseToonDirect", Float) = 1
+
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
 
         //StylizedPBR
@@ -426,9 +429,25 @@ Shader "Universal Render Pipeline/Stylized Lit"
                 MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, half4(0, 0, 0, 0));
 
                 float ndotl = LinearStep( _ShadowThreshold - _ShadowSmooth, _ShadowThreshold + _ShadowSmooth, dot(mainLight.direction, inputData.normalWS) * 0.5 + 0.5 );
+                BRDFData brdfDataClearCoat = (BRDFData)0;
 
-                half3 color = StylizedGlobalIllumination(brdfData, radiance, inputData.bakedGI, occlusion, inputData.normalWS, inputData.viewDirectionWS, metallic, lerp(1,ndotl, _DirectionalFresnel)  );
-                color += LightingStylizedPhysicallyBased(brdfData, radiance, mainLight, inputData.normalWS, inputData.viewDirectionWS);
+                half3 color = GlobalIllumination(brdfData, brdfDataClearCoat, 0,
+                    inputData.bakedGI, 1,
+                    inputData.normalWS, inputData.viewDirectionWS);
+                if(_UseToonIndirect > 0.5)
+                {
+                    color = StylizedGlobalIllumination(brdfData, radiance, inputData.bakedGI, occlusion, inputData.normalWS, inputData.viewDirectionWS, metallic, lerp(1,ndotl, _DirectionalFresnel)  );
+                }
+                if(_UseToonDirect > 0.5)
+                {
+                    color += LightingStylizedPhysicallyBased(brdfData, radiance, mainLight, inputData.normalWS, inputData.viewDirectionWS);
+                }
+                else
+                {
+                    color += LightingPhysicallyBased(brdfData, mainLight, inputData.normalWS, inputData.viewDirectionWS);
+                }
+                
+                
 
             #ifdef _ADDITIONAL_LIGHTS
                 uint pixelLightCount = GetAdditionalLightsCount();

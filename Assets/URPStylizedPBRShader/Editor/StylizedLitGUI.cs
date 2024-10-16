@@ -56,6 +56,9 @@ namespace UnityEditor.Rendering.Universal.ShaderGUI
             // Surface Option Props
             public MaterialProperty workflowMode;
 
+            public MaterialProperty useToonIndirect;
+            public MaterialProperty useToonDirect;
+
             // Surface Input Props
             public MaterialProperty metallic;
             public MaterialProperty specColor;
@@ -108,6 +111,10 @@ namespace UnityEditor.Rendering.Universal.ShaderGUI
             {
                 // Surface Option Props
                 workflowMode = BaseShaderGUI.FindProperty("_WorkflowMode", properties, false);
+
+                useToonIndirect = BaseShaderGUI.FindProperty("_UseToonIndirect", properties, false);
+                useToonDirect = BaseShaderGUI.FindProperty("_UseToonDirect", properties, false);
+
                 // Surface Input Props
                 metallic = BaseShaderGUI.FindProperty("_Metallic", properties);
                 specColor = BaseShaderGUI.FindProperty("_SpecColor", properties, false);

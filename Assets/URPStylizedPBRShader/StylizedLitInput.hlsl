@@ -6,6 +6,8 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceInput.hlsl"
 
 CBUFFER_START(UnityPerMaterial)
+half _UseToonIndirect, _UseToonDirect;
+
 float4 _BaseMap_ST;
 half4 _BaseColor;
 half4 _SpecColor;

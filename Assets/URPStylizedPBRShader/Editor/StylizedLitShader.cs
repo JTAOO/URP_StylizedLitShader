@@ -161,6 +161,9 @@ namespace UnityEditor.Rendering.Universal.ShaderGUI
                 }
                 EditorGUILayout.Space();
 
+                materialEditor.ShaderProperty(litProperties.useToonIndirect, "useToonIndirect", 1);
+                materialEditor.ShaderProperty(litProperties.useToonDirect, "useToonDirect", 1);
+
                 EditorGUILayout.HelpBox("Stylized Diffuse", MessageType.None);
 
                 materialEditor.ShaderProperty(litProperties.medColor, StStyles.medColorGUI, 1);
